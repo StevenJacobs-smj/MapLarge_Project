@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title></title>
+</head>
+<body onload="updateLocation()">
+    <!--<body>-->
+    <center>
+        <table style="width:90%">
+            <tr>
+                <td style="width:100%;">
+                    <Center>
+                        <table style="width:100%;">
+                            <tr><td  style="white-space:nowrap;padding-right:20px;"><button type="button" onclick="goUpDirectory()"> < Back</button></td>
+                                <td style="white-space:nowrap;">Input for file location:</td>
+                                <td style="width:100%"><input type="text" id="locationInput" style="width:90%;margin-left:5%;" /></td>
+                                <td><button type="button" onclick="searchFunction()">Update</button></td>
+                            </tr>
+                        </table>
+                    </Center>
+                    <table>
+                        <tr>
+                            <table style="width:100%;border:1px solid;border-spacing:0px;">
+                                <tr>
+                                    <td style="border-bottom: 1px solid; width: 100%; padding: 10px;">Name</td>
+                                    <td style="border-bottom: 1px solid; white-space: nowrap; ">File Count: </td>
+                                    <td style="border-bottom: 1px solid;padding:10px;"><span id="fileCount">0</span></td>
+                                    <td style="border-bottom: 1px solid; width: 25px; ">&nbsp;</td>
+                                    <td style="border-bottom: 1px solid; white-space: nowrap; ">Folder Count: </td>
+                                    <td style="border-bottom: 1px solid;padding:10px;"><span id="folderCount">0</span></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="6">
+                                        <table style="width:100%;border-spacing:0px" id="tableBody">
+                                            <tr><td></td></tr>
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            </table>
+
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </center>
+</body>
+</html>
+
+
+<script>
+
+    function searchFunction() {
+        var inputLocation = document.getElementById("locationInput").value;
+        updateLocation(inputLocation);
+    }
+
+    async function updateLocation(inputLocation) {
+
+        try {
+            if (inputLocation == null) { inputLocation = ""; }
+            var response = await fetch('/Test?RequestType=updateLocation&location=' + inputLocation);
+
+            //Check for bad Request
+            if (!response.ok) {
+                alert("Bad Request")
+                throw new Error(`HTTP error: ${response.status}`);
+                return;
+            }
+
+            const RespDTO = await response.json();
+            var result = JSON.parse(RespDTO.data);
+            var files = result.DataList;
+
+            //Update Query String
+            const url = new URL(window.location);
+            url.searchParams.set("path", result.FullPath);
+            history.pushState(null, '', url);
+
+            document.getElementById("locationInput").value = result.FullPath;
+
+            //Build Rows
+            var displayText = "";
+            for (let i = 0; i < files.length; i++) {
+                displayText += buildRow(i, files[i].FileName, files[i].FileSize, result.FullPath);
+            }
+            document.getElementById("tableBody").innerHTML = displayText;
+            document.getElementById("fileCount").innerHTML = result.FileCount;
+            document.getElementById("folderCount").innerHTML = result.FolderCount;
+
+            console.log(data);
+
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    }
+
+
+    function buildRow(index, fileName, fileSize,path) {
+        var background = "";
+        if (index % 2 == 1) { background = "#F0F0F0" }
+
+        var extraInfo = "";
+        if (fileSize.length > 0) { extraInfo = fileSize + " Bytes"; }
+
+        var navigateTo = "";
+        if (fileSize.length == 0) { navigateTo = "navigateToFolder('" + fileName + "')"; }
+        else { navigateTo = "navigateToFile('" + fileName + "')"; }
+
+
+
+        var highlightColor = "#e0e0e0";
+        var row = "<tr style=\"background:" + background + "\" ondblclick=\"" + navigateTo + "\""
+            + " onmouseover =\"this.style.backgroundColor='" + highlightColor + "'\" onmouseout=\"this.style.backgroundColor='" + background + "'\">"
+            + "<td>" + fileName + "</td>"
+            + "<td>" + extraInfo + "</td>"
+            + "<td><a download href=\"Downloads\\" + fileName  + "\">Download</a></td>"
+            + "</tr> ";
+
+        return row;
+    }
+
+    function navigateToFile(name) {
+        alert(name + " has been selected");
+    }
+
+    function navigateToFolder(name) {
+        const url = new URL(window.location);
+        var currentPath = url.searchParams.get("path");
+        updateLocation(currentPath + "\\" + name);
+
+        //var currentPath = document.getElementById("locationInput").value;
+        //updateLocation(currentPath +"\\" + name);
+    }
+
+    function goUpDirectory() {
+        const url = new URL(window.location);
+        var currentPath = url.searchParams.get("path");
+        var idx = currentPath.lastIndexOf("\\");
+        if (idx !== -1) {
+            var result = currentPath.substring(0, idx);
+            updateLocation(result);
+        }
+    }
+
+</script>
+
+
