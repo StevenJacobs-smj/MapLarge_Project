@@ -30,7 +30,7 @@ namespace TestProject.Controllers {
                 if (requestType.Equals("updateLocation"))
                 {
                     if (location == null) { location = ""; }
-                    DirectoryInfoResponseDto requestDto = FileUtils.GetDirectoryInfo(location,filter);
+                    DirectoryInfoResponseDto requestDto = FileUtils.GetDirectoryInfo(location, filter);
 
                     if (requestDto == null)
                     {
@@ -38,25 +38,7 @@ namespace TestProject.Controllers {
                     }
 
                     DataResponseDto response = new DataResponseDto();
-                    response.FileCount = requestDto.Files.Count + "";
-                    response.FolderCount = requestDto.SubDirectories.Count + "";
-
-                    for (int i = 0; i < requestDto.Files.Count; i++)
-                    {
-                        TestData td = new();
-                        td.FileName = requestDto.Files[i].Name;
-                        td.FileSize = requestDto.Files[i].SizeBytes + "";
-                        response.DataList.Add(td);
-                    }
-
-                    for (int i = 0; i < requestDto.SubDirectories.Count; i++)
-                    {
-                        TestData td = new();
-                        td.FileName = requestDto.SubDirectories[i].Name;
-                        response.DataList.Add(td);
-                    }
-
-                    response.FullPath = requestDto.FullPath;
+                    response = buildOutputList(requestDto);
 
                     return Ok(new 
                     {
@@ -74,6 +56,29 @@ namespace TestProject.Controllers {
 
         }
 
+        public DataResponseDto buildOutputList(DirectoryInfoResponseDto requestDto)
+        {
+            DataResponseDto response = new DataResponseDto();
+            response.FileCount = requestDto.Files.Count + "";
+            response.FolderCount = requestDto.SubDirectories.Count + "";
+            for (int i = 0; i < requestDto.Files.Count; i++)
+            {
+                TestData td = new();
+                td.FileName = requestDto.Files[i].Name;
+                td.FileSize = requestDto.Files[i].SizeBytes + "";
+                response.DataList.Add(td);
+            }
+            for (int i = 0; i < requestDto.SubDirectories.Count; i++)
+            {
+                TestData td = new();
+                td.FileName = requestDto.SubDirectories[i].Name;
+                response.DataList.Add(td);
+            }
+            response.FullPath = requestDto.FullPath;
+            return response;
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> Post(
             [FromForm] string currentPath,
@@ -84,24 +89,7 @@ namespace TestProject.Controllers {
 
             try
             {
-                var path = Path.Combine(currentPath, myFile.FileName);
-
-                FileInfo fileInfo = new FileInfo(path);
-                int index = 1;
-                string name =  myFile.FileName.Substring(0, myFile.FileName.LastIndexOf("."));
-                string extension = myFile.FileName.Substring(myFile.FileName.LastIndexOf("."));
-                while(fileInfo.Exists)
-                {
-                    string newFileName = name + " - Copy";
-                    if (index > 1)
-                    {
-                        newFileName += " (" + index + ")";
-                    }
-                    index++;
-                    newFileName += extension;
-                    path = Path.Combine(currentPath, newFileName);
-                    fileInfo = new FileInfo(path);
-                }
+                string path = FileUtils.checkImportFile(currentPath, myFile);
 
                 using (Stream filestream = new FileStream(path,FileMode.Create))
                 {

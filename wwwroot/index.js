@@ -6,9 +6,36 @@
     updateLocation(path);
 }
 
-function UpdateFunction() {
+function updateFunction() {
     var inputLocation = document.getElementById("locationInput").value;
     updateLocation(inputLocation);
+}
+
+function navigateToFile(name) {
+    alert(name + " has been selected");
+}
+
+function navigateToFolder(name) {
+    const url = new URL(window.location);
+    var currentPath = url.searchParams.get("path");
+    updateLocation(currentPath + "\\" + name);
+}
+
+function goUpDirectory() {
+    const url = new URL(window.location);
+    var currentPath = url.searchParams.get("path");
+    var idx = currentPath.lastIndexOf("\\");
+    if (idx !== -1) {
+        var result = currentPath.substring(0, idx);
+        updateLocation(result);
+    }
+}
+function searchFunction() {
+    const searchInput = document.getElementById('searchInput').value;
+    
+    const url = new URL(window.location);
+    var currentPath = url.searchParams.get("path");
+    updateLocation(currentPath, searchInput);
 }
 
 async function updateLocation(inputLocation, filter) {
@@ -80,25 +107,7 @@ function buildRow(index, fileName, fileSize, path) {
     return row;
 }
 
-function navigateToFile(name) {
-    alert(name + " has been selected");
-}
 
-function navigateToFolder(name) {
-    const url = new URL(window.location);
-    var currentPath = url.searchParams.get("path");
-    updateLocation(currentPath + "\\" + name);
-}
-
-function goUpDirectory() {
-    const url = new URL(window.location);
-    var currentPath = url.searchParams.get("path");
-    var idx = currentPath.lastIndexOf("\\");
-    if (idx !== -1) {
-        var result = currentPath.substring(0, idx);
-        updateLocation(result);
-    }
-}
 
 
 async function uploadFile() {
@@ -134,10 +143,3 @@ async function uploadFile() {
 }
 
 
-function searchFunction() {
-    const searchInput = document.getElementById('searchInput').value;
-    
-    const url = new URL(window.location);
-    var currentPath = url.searchParams.get("path");
-    updateLocation(currentPath, searchInput);
-}

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.FileProviders;
 using System.Text.Json;
 using TestProject.Controllers;
 using static TestProject.Models.FileInfoDTOs;
@@ -79,6 +81,38 @@ namespace TestProject.Actions
                 {
                     files.Remove(files[i]);
                 }
+            }
+        }
+
+        public static string checkImportFile(string currentPath, IFormFile myFile)
+        {
+            try
+            {
+                var path = Path.Combine(currentPath, myFile.FileName);
+
+                FileInfo fileInfo = new FileInfo(path);
+                int index = 1;
+                string name = myFile.FileName.Substring(0, myFile.FileName.LastIndexOf("."));
+                string extension = myFile.FileName.Substring(myFile.FileName.LastIndexOf("."));
+                while (fileInfo.Exists)
+                {
+                    string newFileName = name + " - Copy";
+                    if (index > 1)
+                    {
+                        newFileName += " (" + index + ")";
+                    }
+                    index++;
+                    newFileName += extension;
+                    path = Path.Combine(currentPath, newFileName);
+                    fileInfo = new FileInfo(path);
+                }
+
+                return path;
+
+            }
+            catch (Exception ex)
+            {
+                return "";
             }
         }
     }
