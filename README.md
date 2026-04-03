@@ -1,5 +1,12 @@
 File & Directory Browsing Single Page App 
 
+
+Notes for Reviewers
+-Video Screen recording was sent to your emails but can also be found here...
+
+HTTPS://
+
+
 Features
 -Navigate Directories
 -Upload/Download files
@@ -7,6 +14,8 @@ Features
 
 Stack
 -C#, JavaScript, HTML
+
+Architecture
 -MVC
 
 Notes
@@ -21,8 +30,5 @@ Future Improvements
 -Improve UI/UX
 -Use Base64 encoding for downloads(Available on more browsers, more complex files)
 
-Notes for Reviewers
--Video Screen recording was sent to your emails but can also be found here...
 
-HTTPS://
 
