@@ -6,7 +6,7 @@ Features
 -Search by name
 
 Stack
--C#, JavaScript
+-C#, JavaScript, HTML
 -MVC
 
 Notes
