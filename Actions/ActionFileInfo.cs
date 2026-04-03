@@ -14,7 +14,7 @@ namespace TestProject.Actions
             // Check if exists
             if(directoryPath.Length == 0)
             {
-                directoryPath = "\\TestProject\\TestFileSystem";
+                directoryPath = null;
             }
             var di = new DirectoryInfo(directoryPath);
 
