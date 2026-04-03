@@ -70,7 +70,7 @@ function buildRow(index, fileName, fileSize, path) {
     }
 
     var highlightColor = "#e0e0e0";
-    var row = "<tr style=\"background:" + background + "\" ondblclick=\"" + navigateTo + "\""
+    var row = "<tr style=\"cursor:pointer;background:" + background + "\" ondblclick=\"" + navigateTo + "\""
         + " onmouseover =\"this.style.backgroundColor='" + highlightColor + "'\" onmouseout=\"this.style.backgroundColor='" + background + "'\">"
         + "<td>" + fileName + "</td>"
         + "<td>" + extraInfo + "</td>"
@@ -136,7 +136,7 @@ async function uploadFile() {
 
 function searchFunction() {
     const searchInput = document.getElementById('searchInput').value;
-
+    
     const url = new URL(window.location);
     var currentPath = url.searchParams.get("path");
     updateLocation(currentPath, searchInput);
