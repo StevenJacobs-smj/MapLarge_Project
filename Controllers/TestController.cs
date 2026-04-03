@@ -84,9 +84,6 @@ namespace TestProject.Controllers {
 
             try
             {
-                //var path = Path.Combine(Path.GetTempPath(), myFile.FileName);
-                //using var stream = System.IO.File.Create(path);
-                //await myFile.CopyToAsync(stream);
                 var path = Path.Combine(currentPath, myFile.FileName);
 
                 FileInfo fileInfo = new FileInfo(path);

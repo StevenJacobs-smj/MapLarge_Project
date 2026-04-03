@@ -134,46 +134,8 @@ async function uploadFile() {
 }
 
 
-
-async function postTest(nameValue) {
-    try {
-        //const res = await fetch('/Test/SaveData', {
-        //    method: 'POST',
-        //    headers: { 'Content-Type': 'application/json' },
-        //    body: JSON.stringify({ name: nameValue })
-        //});
-        const fileInput = document.getElementById('fileInput');
-        const file = fileInput.files[0];
-        if (!file) {
-            alert("Please select a file");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append("myFile", file);
-
-        const res = await fetch('/Test', {
-            method: 'POST',
-            body: formData
-        });
-
-        // check status first
-        if (!res.ok) {
-            const text = await res.text().catch(() => '');
-            console.error('POST failed', res.status, text);
-            return;
-        }
-
-        const result = await res.json();
-        console.log("POST Response:", result);
-    } catch (err) {
-        console.error("POST Error:", err);
-    }
-}
-
 function searchFunction() {
     const searchInput = document.getElementById('searchInput').value;
-    alert(searchInput);
 
     const url = new URL(window.location);
     var currentPath = url.searchParams.get("path");

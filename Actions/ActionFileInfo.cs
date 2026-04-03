@@ -14,7 +14,7 @@ namespace TestProject.Actions
             // Check if exists
             if(directoryPath.Length == 0)
             {
-                return null;
+                directoryPath = "\\TestProject\\TestFileSystem";
             }
             var di = new DirectoryInfo(directoryPath);
 
@@ -43,6 +43,7 @@ namespace TestProject.Actions
 
             //Filter by SearchPattern
             filterBySearchPattern(ref files, searchPattern);
+            filterBySearchPattern(ref subDirs, searchPattern);
 
             return new DirectoryInfoResponseDto
             {
