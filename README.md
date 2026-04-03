@@ -2,10 +2,7 @@ File & Directory Browsing Single Page App
 
 
 Notes for Reviewers
--Video Screen recording was sent to your emails but can also be found here...
-
-HTTPS://
-
+-Walkthrough email was sent to appropriate locations
 
 Features
 -Navigate Directories
