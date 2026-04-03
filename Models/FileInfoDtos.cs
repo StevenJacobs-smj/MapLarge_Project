@@ -46,5 +46,15 @@ namespace TestProject.Models
             public string FileName { get; set; } = string.Empty;
             public string? FileSize { get; set; } = string.Empty;
         }
+
+        public class ApiResponseDto
+        {
+            public bool Success { get; set; }
+            public string? Data { get; set; }
+            public string? FullPath { get; set; }
+            public string Message { get; set; } = string.Empty;
+            public string[]? Errors { get; set; }
+            public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+        }
     }
 }
